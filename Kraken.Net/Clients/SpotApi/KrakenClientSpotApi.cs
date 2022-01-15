@@ -94,7 +94,7 @@ namespace Kraken.Net.Clients.SpotApi
                 return tickers.As<Ticker>(null);
 
             if (!tickers.Data.Any())
-                return new WebCallResult<Ticker>(tickers.ResponseStatusCode, tickers.ResponseHeaders, null, new ServerError("No symbol found"));
+                return tickers.AsError<Ticker>(new ServerError("No symbol found"));
 
             var ticker = tickers.Data.First();
             return tickers.As(new Ticker
@@ -205,8 +205,8 @@ namespace Kraken.Net.Clients.SpotApi
                 return result.As<Order>(null);
 
             if (!result.Data.Any())
-                return new WebCallResult<Order>(result.ResponseStatusCode, result.ResponseHeaders, null, new ServerError("Order not found"));
-
+                return result.AsError<Order>(new ServerError("Order not found"));
+                
             var order = result.Data.First();
             return result.As(new Order
             {
@@ -291,7 +291,7 @@ namespace Kraken.Net.Clients.SpotApi
                 return result.As<OrderId>(null);
 
             if (!result.Data.Pending.Any() && result.Data.Count == 0)
-                return WebCallResult<OrderId>.CreateErrorResult(result.ResponseStatusCode, result.ResponseHeaders, new ServerError("No orders canceled"));
+                return result.AsError<OrderId>(new ServerError("No orders canceled"));
 
             return result.As(new OrderId
             {

@@ -53,7 +53,7 @@ namespace Kraken.Net.SymbolOrderBooks
             Status = OrderBookStatus.Syncing;
 
             var setResult = await WaitForSetOrderBookAsync(10000).ConfigureAwait(false);
-            return setResult ? result : new CallResult<UpdateSubscription>(null, setResult.Error);
+            return setResult ? result : new CallResult<UpdateSubscription>(setResult.Error!);
         }
 
         /// <inheritdoc />

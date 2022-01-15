@@ -308,8 +308,8 @@ namespace Kraken.Net.Clients.SpotApi
             };
             var result = await _baseClient.QueryInternalAsync<KrakenSocketResponseBase>(this, _authBaseAddress, request, false).ConfigureAwait(false);
             if (result)
-                return new CallResult<bool>(true, null);
-            return new CallResult<bool>(false, result.Error);
+                return new CallResult<bool>(true);
+            return new CallResult<bool>(result.Error!);
         }
 
         /// <inheritdoc />

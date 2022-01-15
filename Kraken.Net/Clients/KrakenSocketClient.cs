@@ -98,12 +98,12 @@ namespace Kraken.Net.Clients
             var error = data["errorMessage"]?.ToString();
             if (!string.IsNullOrEmpty(error))
             {
-                callResult = new CallResult<T>(default, new ServerError(error!));
+                callResult = new CallResult<T>(new ServerError(error!));
                 return true;
             }
 
             var response = data.ToObject<T>();
-            callResult = new CallResult<T>(response, null);
+            callResult = new CallResult<T>(response!);
             return true;
         }
 
@@ -125,13 +125,13 @@ namespace Kraken.Net.Clients
             var response = message.ToObject<KrakenSubscriptionEvent>();
             if (response == null)
             {
-                callResult = new CallResult<object>(response, new UnknownError("Failed to parse subscription response"));
+                callResult = new CallResult<object>(new UnknownError("Failed to parse subscription response"));
                 return true;
             }
 
             if (response.ChannelId != 0)
                 kRequest.ChannelId = response.ChannelId;
-            callResult = new CallResult<object>(response, response.Status == "subscribed" ? null : new ServerError(response.ErrorMessage ?? "-"));
+            callResult = response.Status == "subscribed" ? new CallResult<object>(response): new CallResult<object>(new ServerError(response.ErrorMessage ?? "-"));
             return true;
         }
 

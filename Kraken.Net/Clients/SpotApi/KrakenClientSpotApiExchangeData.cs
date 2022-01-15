@@ -30,8 +30,8 @@ namespace Kraken.Net.Clients.SpotApi
         {
             var result = await _baseClient.Execute<KrakenServerTime>(_baseClient.GetUri("0/public/Time"), HttpMethod.Get, ct).ConfigureAwait(false);
             if (!result)
-                return WebCallResult<DateTime>.CreateErrorResult(result.Error!);
-            return new WebCallResult<DateTime>(result.ResponseStatusCode, result.ResponseHeaders, result.Data.UnixTime, null);
+                return result.AsError<DateTime>(result.Error!);
+            return result.As<DateTime>(result.Data.UnixTime);
         }
 
         /// <inheritdoc />
@@ -107,7 +107,7 @@ namespace Kraken.Net.Clients.SpotApi
             parameters.AddOptionalParameter("count", limit);
             var result = await _baseClient.Execute<Dictionary<string, KrakenOrderBook>>(_baseClient.GetUri("0/public/Depth"), HttpMethod.Get, ct, parameters).ConfigureAwait(false);
             if (!result)
-                return new WebCallResult<KrakenOrderBook>(result.ResponseStatusCode, result.ResponseHeaders, null, result.Error);
+                return result.AsError<KrakenOrderBook>(result.Error!);
             return result.As(result.Data.First().Value);
         }
 

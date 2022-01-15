@@ -62,10 +62,10 @@ namespace Kraken.Net.Clients
         {
             var result = await SendRequestAsync<KrakenResult<T>>(apiClient, url, method, ct, parameters, signed, requestWeight: weight).ConfigureAwait(false);
             if (!result)
-                return new WebCallResult<T>(result.ResponseStatusCode, result.ResponseHeaders, default, result.Error);
+                return result.AsError<T>(result.Error!);
 
             if (result.Data.Error.Any())
-                return new WebCallResult<T>(result.ResponseStatusCode, result.ResponseHeaders, default, new ServerError(string.Join(", ", result.Data.Error)));
+                return result.AsError<T>(new ServerError(string.Join(", ", result.Data.Error)));
 
             return result.As(result.Data.Result);
         }
