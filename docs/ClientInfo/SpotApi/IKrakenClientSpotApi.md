@@ -1,7 +1,7 @@
 ---
 title: IKrakenClientSpotApi
 has_children: true
-parent: IKrakenClient
+parent: Rest API documentation
 ---
 *[generated documentation]*  
 `KrakenClient > SpotApi`  

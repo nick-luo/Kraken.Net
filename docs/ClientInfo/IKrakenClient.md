@@ -1,8 +1,9 @@
 ---
-title: IKrakenClient
+title: Rest API documentation
 has_children: true
 ---
 *[generated documentation]*  
+### KrakenClient  
 *Client for accessing the Kraken API.*
   
 ***

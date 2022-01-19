@@ -2,7 +2,7 @@
 title: IKrakenClientSpotApiTrading
 has_children: false
 parent: IKrakenClientSpotApi
-grand_parent: IKrakenClient
+grand_parent: Rest API documentation
 ---
 *[generated documentation]*  
 `KrakenClient > SpotApi > Trading`  

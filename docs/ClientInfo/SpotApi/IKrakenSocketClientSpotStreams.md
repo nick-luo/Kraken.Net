@@ -1,7 +1,7 @@
 ---
 title: IKrakenSocketClientSpotStreams
 has_children: true
-parent: IKrakenSocketClient
+parent: Socket API documentation
 ---
 *[generated documentation]*  
 `KrakenSocketClient > SpotStreams`  
