@@ -5,8 +5,7 @@ Kraken.Net is a wrapper around the Kraken API as described on [Kraken](https://w
 
 **If you think something is broken, something is missing or have any questions, please open an [Issue](https://github.com/JKorf/Kraken.Net/issues)**
 
-## CryptoExchange.Net
-This library is build upon the CryptoExchange.Net library, make sure to check out the documentation on that for basic usage: [docs](https://github.com/JKorf/CryptoExchange.Net)
+[Documentation](https://jkorf.github.io/Kraken.Net/)
 
 ## Donate / Sponsor
 I develop and maintain this package on my own for free in my spare time. Donations are greatly appreciated. If you prefer to donate any other currency please contact me.
@@ -19,77 +18,6 @@ Alternatively, sponsor me on Github using [Github Sponsors](https://github.com/s
 
 ## Discord
 A Discord server is available [here](https://discord.gg/MSpeEtSY8t). For discussion and/or questions around the CryptoExchange.Net and implementation libraries, feel free to join.
-
-## Getting started
-Make sure you have installed the Kraken.Net [Nuget](https://www.nuget.org/packages/KrakenExchange.Net/) package and add `using Kraken.Net` to your usings.  You now have access to 2 clients:  
-**KrakenClient**  
-The client to interact with the Kraken REST API. Getting prices:
-````C#
-var client = new KrakenClient(new KrakenClientOptions(){
- // Specify options for the client
-});
-var callResult = await client.GetTickersAsync();
-// Make sure to check if the call was successful
-if(!callResult.Success)
-{
-  // Call failed, check callResult.Error for more info
-}
-else
-{
-  // Call succeeded, callResult.Data will have the resulting data
-}
-````
-
-Placing an order:
-````C#
-var client = new KrakenClient(new KrakenClientOptions(){
- // Specify options for the client
- ApiCredentials = new ApiCredentials("Key", "Secret")
-});
-var callResult = await client.PlaceOrderAsync("BTCUSDT", OrderSide.Buy, OrderType.Limit, 10, price: 50);
-// Make sure to check if the call was successful
-if(!callResult.Success)
-{
-  // Call failed, check callResult.Error for more info
-}
-else
-{
-  // Call succeeded, callResult.Data will have the resulting data
-}
-````
-
-**KrakenSocketClient**  
-The client to interact with the Kraken websocket API. Basic usage:
-````C#
-var client = new KrakenSocketClient(new KrakenSocketClientOptions()
-{
-  // Specify options for the client
-});
-var subscribeResult = client.SubscribeToTickerUpdatesAsync("ETHXBT", data => {
-  // Handle data when it is received
-});
-// Make sure to check if the subscritpion was successful
-if(!subscribeResult.Success)
-{
-  // Subscription failed, check callResult.Error for more info
-}
-else
-{
-  // Subscription succeeded, the handler will start receiving data when it is available
-}
-````
-
-## Client options
-For the basic client options see also the CryptoExchange.Net [docs](https://github.com/JKorf/CryptoExchange.Net#client-options). The here listed options are the options specific for Kraken.Net.  
-**KrakenClientOptions**  
-| Property | Description | Default |
-| ----------- | ----------- | ---------|
-|`StaticTwoFactorAuthenticationPassword`|The static password to be sent as `otp` parameter in requests |`null`
-
-**KrakenSocketClientOptions**  
-| Property | Description | Default |
-| ----------- | ----------- | ---------|
-|`AuthBaseAddress`|The base address for authenticated subscriptions|`wss://ws-auth.kraken.com/`
 
 ## Release notes
 * Version 3.0.0-beta1 - 15 Jan 2022
