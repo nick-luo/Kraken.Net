@@ -83,6 +83,8 @@ namespace Kraken.Net.Objects.Models
         /// </summary>
         [JsonProperty("price")]
         public decimal AveragePrice { get; set; }
+        [JsonProperty("avg_price")]
+        private decimal AveragePrice2 { get => AveragePrice; set => AveragePrice = value; }
         /// <summary>
         /// Stop price
         /// </summary>

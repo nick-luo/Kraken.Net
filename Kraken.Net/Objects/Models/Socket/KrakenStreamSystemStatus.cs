@@ -10,6 +10,14 @@ namespace Kraken.Net.Objects.Models.Socket
     public class KrakenStreamSystemStatus
     {
         /// <summary>
+        /// Connection id
+        /// </summary>
+        public string ConnectionId { get; set; } = string.Empty;
+        /// <summary>
+        /// Name of the event
+        /// </summary>
+        public string Event { get; set; } = string.Empty;
+        /// <summary>
         /// Status
         /// </summary>
         [JsonConverter(typeof(SystemStatusConverter))]
