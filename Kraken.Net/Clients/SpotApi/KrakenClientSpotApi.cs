@@ -185,7 +185,7 @@ namespace Kraken.Net.Clients.SpotApi
             }));
         }
 
-        async Task<WebCallResult<OrderId>> ISpotClient.PlaceOrderAsync(string symbol, CryptoExchange.Net.CommonObjects.OrderSide side, CryptoExchange.Net.CommonObjects.OrderType type, decimal quantity, decimal? price = null, string? accountId = null)
+        async Task<WebCallResult<OrderId>> ISpotClient.PlaceOrderAsync(string symbol, CommonOrderSide side, CommonOrderType type, decimal quantity, decimal? price = null, string? accountId = null)
         {
             var result = await Trading.PlaceOrderAsync(symbol, GetOrderSide(side), GetOrderType(type), quantity, price: price).ConfigureAwait(false);
             if (!result)
@@ -217,9 +217,9 @@ namespace Kraken.Net.Clients.SpotApi
                 QuantityFilled = order.Value.QuantityFilled,
                 Symbol = order.Value.OrderDetails.Symbol,
                 Timestamp = order.Value.CreateTime,
-                Side = order.Value.OrderDetails.Side == Enums.OrderSide.Buy ? CryptoExchange.Net.CommonObjects.OrderSide.Buy: CryptoExchange.Net.CommonObjects.OrderSide.Sell,
-                Type = order.Value.OrderDetails.Type == Enums.OrderType.Limit ? CryptoExchange.Net.CommonObjects.OrderType.Limit: order.Value.OrderDetails.Type == Enums.OrderType.Market? CryptoExchange.Net.CommonObjects.OrderType.Market: CryptoExchange.Net.CommonObjects.OrderType.Other,
-                Status = order.Value.Status == Enums.OrderStatus.Canceled ? CryptoExchange.Net.CommonObjects.OrderStatus.Canceled: order.Value.Status == Enums.OrderStatus.Closed || order.Value.Status == Enums.OrderStatus.Pending ? CryptoExchange.Net.CommonObjects.OrderStatus.Active: CryptoExchange.Net.CommonObjects.OrderStatus.Filled
+                Side = order.Value.OrderDetails.Side == OrderSide.Buy ? CommonOrderSide.Buy: CommonOrderSide.Sell,
+                Type = order.Value.OrderDetails.Type == OrderType.Limit ? CommonOrderType.Limit: order.Value.OrderDetails.Type == Enums.OrderType.Market? CommonOrderType.Market: CommonOrderType.Other,
+                Status = order.Value.Status == OrderStatus.Canceled ? CommonOrderStatus.Canceled: order.Value.Status == OrderStatus.Closed || order.Value.Status == Enums.OrderStatus.Pending ? CommonOrderStatus.Active: CommonOrderStatus.Filled
             });
         }
 
@@ -257,9 +257,9 @@ namespace Kraken.Net.Clients.SpotApi
                 QuantityFilled = order.Value.QuantityFilled,
                 Symbol = order.Value.OrderDetails.Symbol,
                 Timestamp = order.Value.CreateTime,
-                Side = order.Value.OrderDetails.Side == Enums.OrderSide.Buy ? CryptoExchange.Net.CommonObjects.OrderSide.Buy : CryptoExchange.Net.CommonObjects.OrderSide.Sell,
-                Type = order.Value.OrderDetails.Type == Enums.OrderType.Limit ? CryptoExchange.Net.CommonObjects.OrderType.Limit : order.Value.OrderDetails.Type == Enums.OrderType.Market ? CryptoExchange.Net.CommonObjects.OrderType.Market : CryptoExchange.Net.CommonObjects.OrderType.Other,
-                Status = order.Value.Status == Enums.OrderStatus.Canceled ? CryptoExchange.Net.CommonObjects.OrderStatus.Canceled : order.Value.Status == Enums.OrderStatus.Closed || order.Value.Status == Enums.OrderStatus.Pending ? CryptoExchange.Net.CommonObjects.OrderStatus.Active : CryptoExchange.Net.CommonObjects.OrderStatus.Filled
+                Side = order.Value.OrderDetails.Side == OrderSide.Buy ? CommonOrderSide.Buy : CommonOrderSide.Sell,
+                Type = order.Value.OrderDetails.Type == OrderType.Limit ? CommonOrderType.Limit : order.Value.OrderDetails.Type == Enums.OrderType.Market ? CommonOrderType.Market : CommonOrderType.Other,
+                Status = order.Value.Status == OrderStatus.Canceled ? CommonOrderStatus.Canceled : order.Value.Status == OrderStatus.Closed || order.Value.Status == Enums.OrderStatus.Pending ? CommonOrderStatus.Active : CommonOrderStatus.Filled
             }));
         }
 
@@ -278,9 +278,9 @@ namespace Kraken.Net.Clients.SpotApi
                 QuantityFilled = order.Value.QuantityFilled,
                 Symbol = order.Value.OrderDetails.Symbol,
                 Timestamp = order.Value.CreateTime,
-                Side = order.Value.OrderDetails.Side == Enums.OrderSide.Buy ? CryptoExchange.Net.CommonObjects.OrderSide.Buy : CryptoExchange.Net.CommonObjects.OrderSide.Sell,
-                Type = order.Value.OrderDetails.Type == Enums.OrderType.Limit ? CryptoExchange.Net.CommonObjects.OrderType.Limit : order.Value.OrderDetails.Type == Enums.OrderType.Market ? CryptoExchange.Net.CommonObjects.OrderType.Market : CryptoExchange.Net.CommonObjects.OrderType.Other,
-                Status = order.Value.Status == Enums.OrderStatus.Canceled ? CryptoExchange.Net.CommonObjects.OrderStatus.Canceled : order.Value.Status == Enums.OrderStatus.Closed || order.Value.Status == Enums.OrderStatus.Pending ? CryptoExchange.Net.CommonObjects.OrderStatus.Active : CryptoExchange.Net.CommonObjects.OrderStatus.Filled
+                Side = order.Value.OrderDetails.Side == OrderSide.Buy ? CommonOrderSide.Buy : CommonOrderSide.Sell,
+                Type = order.Value.OrderDetails.Type == OrderType.Limit ? CommonOrderType.Limit : order.Value.OrderDetails.Type == Enums.OrderType.Market ? CommonOrderType.Market : CommonOrderType.Other,
+                Status = order.Value.Status == OrderStatus.Canceled ? CommonOrderStatus.Canceled : order.Value.Status == OrderStatus.Closed || order.Value.Status == Enums.OrderStatus.Pending ? CommonOrderStatus.Active : CommonOrderStatus.Filled
             }));
         }
 
@@ -359,18 +359,18 @@ namespace Kraken.Net.Clients.SpotApi
             throw new ArgumentException("Unsupported timespan for Kraken Klines, check supported intervals using Kraken.Net.Objects.KlineInterval");
         }
 
-        private static Enums.OrderSide GetOrderSide(CryptoExchange.Net.CommonObjects.OrderSide side)
+        private static OrderSide GetOrderSide(CommonOrderSide side)
         {
-            if (side == CryptoExchange.Net.CommonObjects.OrderSide.Sell) return Enums.OrderSide.Sell;
-            if (side == CryptoExchange.Net.CommonObjects.OrderSide.Buy) return Enums.OrderSide.Buy;
+            if (side == CommonOrderSide.Sell) return OrderSide.Sell;
+            if (side == CommonOrderSide.Buy) return OrderSide.Buy;
 
             throw new ArgumentException("Unsupported order side for Kraken order: " + side);
         }
 
-        private static Enums.OrderType GetOrderType(CryptoExchange.Net.CommonObjects.OrderType type)
+        private static OrderType GetOrderType(CommonOrderType type)
         {
-            if (type == CryptoExchange.Net.CommonObjects.OrderType.Limit) return Enums.OrderType.Limit;
-            if (type == CryptoExchange.Net.CommonObjects.OrderType.Market) return Enums.OrderType.Market;
+            if (type == CommonOrderType.Limit) return OrderType.Limit;
+            if (type == CommonOrderType.Market) return OrderType.Market;
 
             throw new ArgumentException("Unsupported order type for Kraken order: " + type);
         }
