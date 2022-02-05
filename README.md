@@ -20,6 +20,10 @@ Alternatively, sponsor me on Github using [Github Sponsors](https://github.com/s
 A Discord server is available [here](https://discord.gg/MSpeEtSY8t). For discussion and/or questions around the CryptoExchange.Net and implementation libraries, feel free to join.
 
 ## Release notes
+* Version 3.0.0-beta4 - 05 Feb 2022
+    * Updated CryptoExchange.Net, adding Cancellation token support for Common interface and SymbolOrderBook
+    * Fixed output spamming of unhandled messages when subscribing multiple symbols
+
 * Version 3.0.0-beta3 - 31 Jan 2022
     * Updated CryptoExchange.Net
 
