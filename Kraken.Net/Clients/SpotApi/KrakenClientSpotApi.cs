@@ -70,8 +70,7 @@ namespace Kraken.Net.Clients.SpotApi
 
         #region common interface
 
-#pragma warning disable 1066
-        async Task<WebCallResult<IEnumerable<Symbol>>> IBaseRestClient.GetSymbolsAsync()
+        async Task<WebCallResult<IEnumerable<Symbol>>> IBaseRestClient.GetSymbolsAsync(CancellationToken ct)
         {
             var exchangeInfo = await ExchangeData.GetSymbolsAsync().ConfigureAwait(false);
             if (!exchangeInfo)
@@ -87,7 +86,7 @@ namespace Kraken.Net.Clients.SpotApi
             }));
         }
 
-        async Task<WebCallResult<Ticker>> IBaseRestClient.GetTickerAsync(string symbol)
+        async Task<WebCallResult<Ticker>> IBaseRestClient.GetTickerAsync(string symbol, CancellationToken ct)
         {
             var tickers = await ExchangeData.GetTickerAsync(symbol).ConfigureAwait(false);
             if (!tickers)
@@ -109,9 +108,9 @@ namespace Kraken.Net.Clients.SpotApi
             });
         }
 
-        async Task<WebCallResult<IEnumerable<Ticker>>> IBaseRestClient.GetTickersAsync()
+        async Task<WebCallResult<IEnumerable<Ticker>>> IBaseRestClient.GetTickersAsync(CancellationToken ct)
         {
-            var assets = await ExchangeData.GetSymbolsAsync().ConfigureAwait(false);
+            var assets = await ExchangeData.GetSymbolsAsync(ct: ct).ConfigureAwait(false);
             if (!assets)
                 return assets.As<IEnumerable<Ticker>>(null);
 
@@ -131,7 +130,7 @@ namespace Kraken.Net.Clients.SpotApi
             }));
         }
 
-        async Task<WebCallResult<IEnumerable<Kline>>> IBaseRestClient.GetKlinesAsync(string symbol, TimeSpan timespan, DateTime? startTime = null, DateTime? endTime = null, int? limit = null)
+        async Task<WebCallResult<IEnumerable<Kline>>> IBaseRestClient.GetKlinesAsync(string symbol, TimeSpan timespan, DateTime? startTime, DateTime? endTime, int? limit, CancellationToken ct)
         {
             if (endTime != null)
                 throw new ArgumentException($"Kraken doesn't support the {nameof(endTime)} parameter for the method {nameof(IBaseRestClient.GetKlinesAsync)}", nameof(endTime));
@@ -139,7 +138,7 @@ namespace Kraken.Net.Clients.SpotApi
             if (limit != null)
                 throw new ArgumentException($"Kraken doesn't support the {nameof(limit)} parameter for the method {nameof(IBaseRestClient.GetKlinesAsync)}", nameof(limit));
 
-            var klines = await ExchangeData.GetKlinesAsync(symbol, GetKlineIntervalFromTimespan(timespan), since: startTime).ConfigureAwait(false);
+            var klines = await ExchangeData.GetKlinesAsync(symbol, GetKlineIntervalFromTimespan(timespan), since: startTime, ct: ct).ConfigureAwait(false);
             if (!klines)
                 return klines.As<IEnumerable<Kline>>(null);
 
@@ -155,9 +154,9 @@ namespace Kraken.Net.Clients.SpotApi
             }));
         }
 
-        async Task<WebCallResult<OrderBook>> IBaseRestClient.GetOrderBookAsync(string symbol)
+        async Task<WebCallResult<OrderBook>> IBaseRestClient.GetOrderBookAsync(string symbol, CancellationToken ct)
         {
-            var book = await ExchangeData.GetOrderBookAsync(symbol).ConfigureAwait(false);
+            var book = await ExchangeData.GetOrderBookAsync(symbol, ct: ct).ConfigureAwait(false);
             if (!book)
                 return book.As<OrderBook>(null);
 
@@ -169,9 +168,9 @@ namespace Kraken.Net.Clients.SpotApi
             });
         }
 
-        async Task<WebCallResult<IEnumerable<Trade>>> IBaseRestClient.GetRecentTradesAsync(string symbol)
+        async Task<WebCallResult<IEnumerable<Trade>>> IBaseRestClient.GetRecentTradesAsync(string symbol, CancellationToken ct)
         {
-            var tradesResult = await ExchangeData.GetTradeHistoryAsync(symbol).ConfigureAwait(false);
+            var tradesResult = await ExchangeData.GetTradeHistoryAsync(symbol, ct: ct).ConfigureAwait(false);
             if (!tradesResult)
                 return tradesResult.As<IEnumerable<Trade>>(null);
 
@@ -185,9 +184,9 @@ namespace Kraken.Net.Clients.SpotApi
             }));
         }
 
-        async Task<WebCallResult<OrderId>> ISpotClient.PlaceOrderAsync(string symbol, CommonOrderSide side, CommonOrderType type, decimal quantity, decimal? price = null, string? accountId = null)
+        async Task<WebCallResult<OrderId>> ISpotClient.PlaceOrderAsync(string symbol, CommonOrderSide side, CommonOrderType type, decimal quantity, decimal? price, string? accountId, CancellationToken ct)
         {
-            var result = await Trading.PlaceOrderAsync(symbol, GetOrderSide(side), GetOrderType(type), quantity, price: price).ConfigureAwait(false);
+            var result = await Trading.PlaceOrderAsync(symbol, GetOrderSide(side), GetOrderType(type), quantity, price: price, ct: ct).ConfigureAwait(false);
             if (!result)
                 return result.As<OrderId>(null);
 
@@ -198,9 +197,9 @@ namespace Kraken.Net.Clients.SpotApi
             });
         }
 
-        async Task<WebCallResult<Order>> IBaseRestClient.GetOrderAsync(string orderId, string? symbol)
+        async Task<WebCallResult<Order>> IBaseRestClient.GetOrderAsync(string orderId, string? symbol, CancellationToken ct)
         {
-            var result = await Trading.GetOrderAsync(orderId).ConfigureAwait(false);
+            var result = await Trading.GetOrderAsync(orderId, ct: ct).ConfigureAwait(false);
             if (!result)
                 return result.As<Order>(null);
 
@@ -223,9 +222,9 @@ namespace Kraken.Net.Clients.SpotApi
             });
         }
 
-        async Task<WebCallResult<IEnumerable<UserTrade>>> IBaseRestClient.GetOrderTradesAsync(string orderId, string? symbol = null)
+        async Task<WebCallResult<IEnumerable<UserTrade>>> IBaseRestClient.GetOrderTradesAsync(string orderId, string? symbol, CancellationToken ct)
         {
-            var result = await Trading.GetUserTradesAsync().ConfigureAwait(false);
+            var result = await Trading.GetUserTradesAsync(ct: ct).ConfigureAwait(false);
             if (!result)
                 return result.As<IEnumerable<UserTrade>>(null);
 
@@ -242,9 +241,9 @@ namespace Kraken.Net.Clients.SpotApi
             }));
         }
 
-        async Task<WebCallResult<IEnumerable<Order>>> IBaseRestClient.GetOpenOrdersAsync(string? symbol)
+        async Task<WebCallResult<IEnumerable<Order>>> IBaseRestClient.GetOpenOrdersAsync(string? symbol, CancellationToken ct)
         {
-            var result = await Trading.GetOpenOrdersAsync().ConfigureAwait(false);
+            var result = await Trading.GetOpenOrdersAsync(ct: ct).ConfigureAwait(false);
             if (!result)
                 return result.As<IEnumerable<Order>>(null);
 
@@ -263,9 +262,9 @@ namespace Kraken.Net.Clients.SpotApi
             }));
         }
 
-        async Task<WebCallResult<IEnumerable<Order>>> IBaseRestClient.GetClosedOrdersAsync(string? symbol)
+        async Task<WebCallResult<IEnumerable<Order>>> IBaseRestClient.GetClosedOrdersAsync(string? symbol, CancellationToken ct)
         {
-            var result = await Trading.GetClosedOrdersAsync().ConfigureAwait(false);
+            var result = await Trading.GetClosedOrdersAsync(ct: ct).ConfigureAwait(false);
             if (!result)
                 return result.As<IEnumerable<Order>>(null);
 
@@ -284,9 +283,9 @@ namespace Kraken.Net.Clients.SpotApi
             }));
         }
 
-        async Task<WebCallResult<OrderId>> IBaseRestClient.CancelOrderAsync(string orderId, string? symbol)
+        async Task<WebCallResult<OrderId>> IBaseRestClient.CancelOrderAsync(string orderId, string? symbol, CancellationToken ct)
         {
-            var result = await Trading.CancelOrderAsync(orderId).ConfigureAwait(false);
+            var result = await Trading.CancelOrderAsync(orderId, ct: ct).ConfigureAwait(false);
             if (!result)
                 return result.As<OrderId>(null);
 
@@ -300,9 +299,9 @@ namespace Kraken.Net.Clients.SpotApi
             });
         }
 
-        async Task<WebCallResult<IEnumerable<Balance>>> IBaseRestClient.GetBalancesAsync(string? accountId = null)
+        async Task<WebCallResult<IEnumerable<Balance>>> IBaseRestClient.GetBalancesAsync(string? accountId, CancellationToken ct)
         {
-            var result = await Account.GetAvailableBalancesAsync().ConfigureAwait(false);
+            var result = await Account.GetAvailableBalancesAsync(ct: ct).ConfigureAwait(false);
             if (!result)
                 return result.As<IEnumerable<Balance>>(null);
 
@@ -314,9 +313,7 @@ namespace Kraken.Net.Clients.SpotApi
                 Total = b.Total
             }));
         }
-
         #endregion
-
         internal Uri GetUri(string endpoint)
         {
             return new Uri(BaseAddress.AppendPath(endpoint));
@@ -334,7 +331,6 @@ namespace Kraken.Net.Clients.SpotApi
 
         internal Task<WebCallResult<T>> Execute<T>(Uri url, HttpMethod method, CancellationToken ct, Dictionary<string, object>? parameters = null, bool signed = false, int weight = 1)
             => _baseClient.Execute<T>(this, url, method, ct, parameters, signed, weight);
-#pragma warning restore 1066
 
         /// <summary>
         /// Get the name of a symbol for Kraken based on the base and quote asset
