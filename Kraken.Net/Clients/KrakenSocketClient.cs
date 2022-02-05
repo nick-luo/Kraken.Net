@@ -9,6 +9,7 @@ using Kraken.Net.Interfaces.Clients;
 using Kraken.Net.Interfaces.Clients.SpotApi;
 using Kraken.Net.Objects;
 using Kraken.Net.Objects.Internal;
+using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 
@@ -40,6 +41,7 @@ namespace Kraken.Net.Clients
         {
             AddGenericHandler("HeartBeat", (messageEvent) => { });
             AddGenericHandler("SystemStatus", (messageEvent) => { });
+            AddGenericHandler("AdditionalSubResponses", (messageEvent) => { });
 
             SpotStreams = AddApiClient(new KrakenSocketClientSpotStreams(log, this, options));
         }
@@ -189,6 +191,23 @@ namespace Kraken.Net.Clients
 
             if (identifier == "SystemStatus" && message["event"] != null && message["event"]!.ToString() == "systemStatus")
                 return true;
+
+            if (identifier == "AdditionalSubResponses")
+            {
+                if (message.Type != JTokenType.Object)
+                    return false;
+
+                if (message["reqid"] == null)
+                    return false;
+
+                var requestId = message["reqid"]!.Value<int>();
+                var subscription = socketConnection.GetSubscriptionByRequest(r => (r as KrakenSubscribeRequest)?.RequestId == requestId);
+                if (subscription == null)
+                    return false;
+
+                // This is another message for subscription we've already subscribed
+                return true;
+            }
 
             return false;
         }
