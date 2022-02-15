@@ -26,7 +26,7 @@ namespace Kraken.Net.Objects
         /// </summary>
         public INonceProvider? NonceProvider { get; set; }
 
-        private readonly RestApiClientOptions _spotApiOptions = new RestApiClientOptions("https://api.kraken.com")
+        private readonly RestApiClientOptions _spotApiOptions = new RestApiClientOptions(KrakenApiAddresses.Default.RestClientAddress)
         {
             RateLimiters = new List<IRateLimiter>
             {
@@ -91,7 +91,7 @@ namespace Kraken.Net.Objects
         /// </summary>
         public INonceProvider? NonceProvider { get; set; }
 
-        private readonly KrakenSocketApiClientOptions _spotStreamsOptions = new KrakenSocketApiClientOptions("wss://ws.kraken.com", "wss://ws-auth.kraken.com/");
+        private readonly KrakenSocketApiClientOptions _spotStreamsOptions = new KrakenSocketApiClientOptions(KrakenApiAddresses.Default.SocketClientPublicAddress, KrakenApiAddresses.Default.SocketClientPrivateAddress);
         /// <summary>
         /// Spot streams options
         /// </summary>
