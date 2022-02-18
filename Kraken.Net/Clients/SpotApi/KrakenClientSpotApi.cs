@@ -8,6 +8,7 @@ using CryptoExchange.Net;
 using CryptoExchange.Net.Authentication;
 using CryptoExchange.Net.CommonObjects;
 using CryptoExchange.Net.Interfaces;
+using CryptoExchange.Net.Interfaces.CommonClients;
 using CryptoExchange.Net.Logging;
 using CryptoExchange.Net.Objects;
 using Kraken.Net.Enums;
@@ -184,9 +185,18 @@ namespace Kraken.Net.Clients.SpotApi
             }));
         }
 
-        async Task<WebCallResult<OrderId>> ISpotClient.PlaceOrderAsync(string symbol, CommonOrderSide side, CommonOrderType type, decimal quantity, decimal? price, string? accountId, CancellationToken ct)
+        async Task<WebCallResult<OrderId>> ISpotClient.PlaceOrderAsync(string symbol, CommonOrderSide side, CommonOrderType type, decimal quantity, decimal? price, string? accountId, string? clientOrderId, CancellationToken ct)
         {
-            var result = await Trading.PlaceOrderAsync(symbol, GetOrderSide(side), GetOrderType(type), quantity, price: price, ct: ct).ConfigureAwait(false);
+            uint? clientId = null;
+            if (clientOrderId != null)
+            {
+                if (!uint.TryParse(clientOrderId, out var id))
+                    throw new ArgumentException("ClientOrderId for Bitfinex should be parsable to int");
+                else
+                    clientId = id;
+            }
+
+            var result = await Trading.PlaceOrderAsync(symbol, GetOrderSide(side), GetOrderType(type), quantity, price: price, clientOrderId: clientId, ct: ct).ConfigureAwait(false);
             if (!result)
                 return result.As<OrderId>(null);
 
