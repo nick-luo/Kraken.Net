@@ -128,8 +128,8 @@ namespace Kraken.Net.Clients.SpotApi
         /// <inheritdoc />
         public async Task<WebCallResult<KrakenPlacedOrder>> PlaceOrderAsync(
             string symbol,
-            Enums.OrderSide side,
-            Enums.OrderType type,
+            OrderSide side,
+            OrderType type,
             decimal quantity,
             decimal? price = null,
             decimal? secondaryPrice = null,
@@ -138,6 +138,7 @@ namespace Kraken.Net.Clients.SpotApi
             DateTime? expireTime = null,
             bool? validateOnly = null,
             uint? clientOrderId = null,
+            IEnumerable<OrderFlags>? flags = null,
             string? twoFactorPassword = null,
             CancellationToken ct = default)
         {
@@ -150,6 +151,7 @@ namespace Kraken.Net.Clients.SpotApi
                 { "volume", quantity.ToString(CultureInfo.InvariantCulture) },
                 { "trading_agreement", "agree" }
             };
+            parameters.AddOptionalParameter("oflags", flags == null ? null: string.Join(",", flags.Select(f => JsonConvert.SerializeObject(f, new OrderFlagsConverter(false)))));
             parameters.AddOptionalParameter("price", price?.ToString(CultureInfo.InvariantCulture));
             parameters.AddOptionalParameter("userref", clientOrderId);
             parameters.AddOptionalParameter("price2", secondaryPrice?.ToString(CultureInfo.InvariantCulture));

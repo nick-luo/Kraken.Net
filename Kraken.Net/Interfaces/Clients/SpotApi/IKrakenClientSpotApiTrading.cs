@@ -120,6 +120,7 @@ namespace Kraken.Net.Interfaces.Clients.SpotApi
         /// <param name="startTime">Scheduled start time</param>
         /// <param name="expireTime">Expiration time</param>
         /// <param name="validateOnly">Only validate inputs, don't actually place the order</param>
+        /// <param name="orderFlags">Flags for the order</param>
         /// <param name="twoFactorPassword">Password or authentication app code if enabled</param>
         /// <param name="ct">Cancellation token</param>
         /// <returns>Placed order info</returns>
@@ -135,6 +136,7 @@ namespace Kraken.Net.Interfaces.Clients.SpotApi
             DateTime? expireTime = null,
             bool? validateOnly = null,
             uint? clientOrderId = null,
+            IEnumerable<OrderFlags>? orderFlags = null,
             string? twoFactorPassword = null,
             CancellationToken ct = default);
 
